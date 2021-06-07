@@ -84,4 +84,5 @@ class Elecciones2021PorActa2daVueltaSpider(scrapy.Spider):
         res_json = json.loads(response.text)
         res_json['mesa'] = mesa_number
         if 'generalPre' in res_json['procesos']:
-            save(res_json, mesa_number, 'presi_2021_2nda_vuelta')
+            if res_json['procesos']['generalPre']['presidencial']['OBSERVACION'] == 'CONTABILIZADAS NORMALES':
+                save(res_json, mesa_number, 'presi_2021_2nda_vuelta')
