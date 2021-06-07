@@ -1,4 +1,5 @@
 from random import randint
+import pendulum
 from time import sleep
 import requests
 import json
@@ -319,6 +320,7 @@ def get_actas(session, mesa_number: str):
 
 def save(acta, mesa_number, acta_name):
     acta['mesa'] = mesa_number
+    acta['hora_descarga'] = pendulum.now('America/Lima').strftime('%Y-%m-%d %H:%M:%S')
     file_name = os.path.join(current_folder, f'{acta_name}.jl')
     with open(file_name, 'a+') as handle:
         handle.write(json.dumps(acta) + '\n')
