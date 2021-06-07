@@ -23,17 +23,24 @@ class Elecciones2021PorActa2daVueltaSpider(scrapy.Spider):
 
     def start_requests(self):
         try:
-            with open(os.path.join(CURRENT_FOLDER, 'presi_2021_2nda_vuelta.jl')) as handle:
+            with open(os.path.join(CURRENT_FOLDER, '..', 'presi_2021_2nda_vuelta.jl')) as handle:
                 current_scrape = handle.readlines()
         except FileNotFoundError:
             current_scrape = []
             pass
 
+        # clean actas res.json()['procesos']['generalPre']['presidencial']['OBSERVACION']
         mesas_already_scraped = set()
+        actas_cleaned = []
         for i in current_scrape:
             i = json.loads(i)
-            mesas_already_scraped.add(i['mesa'])
-        print(f'mesas scrapped {mesas_already_scraped}')
+            if i['procesos']['generalPre']['presidencial']['OBSERVACION'] == 'CONTABILIZADAS NORMALES':
+                actas_cleaned.append(i)
+                mesas_already_scraped.add(i['mesa'])
+        with open(os.path.join(CURRENT_FOLDER, '..', 'presi_2021_2nda_vuelta.jl'), 'w') as handle:
+            for i in actas_cleaned:
+                handle.write(json.dumps(i) + '\n')
+        print(f'mesas scrapped {len(mesas_already_scraped)}')
 
         # Mesas escrapeadas en ateriores procesos
         mesas_anteriores = []
@@ -41,6 +48,7 @@ class Elecciones2021PorActa2daVueltaSpider(scrapy.Spider):
             for i in handle.readlines():
                 i = i.strip()
                 mesas_anteriores.append(i)
+        print(f'mesas anteriores {len(mesas_anteriores)}')
 
         for mesa_number in mesas_anteriores:
             if mesa_number not in mesas_already_scraped:
