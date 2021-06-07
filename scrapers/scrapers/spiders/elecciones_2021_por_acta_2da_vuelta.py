@@ -31,7 +31,7 @@ class Elecciones2021PorActa2daVueltaSpider(scrapy.Spider):
 
         mesas_already_scraped = set()
         for i in current_scrape:
-            json.loads(i)
+            i = json.loads(i)
             mesas_already_scraped.add(i['mesa'])
         print(f'mesas scrapped {mesas_already_scraped}')
 
