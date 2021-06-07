@@ -61,8 +61,6 @@ class Elecciones2021PorActa2daVueltaSpider(scrapy.Spider):
                     callback=self.parse,
                     headers=HEADERS,
                 )
-            if int(i) > 5:
-                break
 
     def parse(self, response):
         mesa_number = response.meta.get('mesa')
